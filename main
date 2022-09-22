@@ -1,0 +1,109 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct Node{
+    int dado;
+    struct Node *next, *prev;
+}Node;
+
+typedef struct{
+    Node *sentinelaI;
+    Node *sentinelaF;
+    unsigned qtde;
+}Lista;
+
+void inicializar(Lista *lista){
+    lista->sentinelaI = lista->sentinelaF = NULL;
+    lista->qtde = 0;
+}
+void inserirInicio(Lista *lista, int dado){
+	Node *New = malloc(sizeof(Node));
+
+    if(New != NULL){
+        New->dado = dado;
+        New->next = lista->sentinelaI;
+        New->prev = lista->sentinelaF;
+        lista->sentinelaI = New;
+        if(lista->qtde == 0){
+            lista->sentinelaF = New;
+        }
+        lista->sentinelaF->next = lista->sentinelaI;
+        lista->qtde++;
+    }
+    else exit;
+}
+void inserirFinal(Lista *lista, int dado){
+	Node *New = malloc(sizeof(Node));
+	if(New != NULL){
+	
+	if(lista->qtde > 0){
+	New->dado = dado;
+	lista->sentinelaF->next = New;
+	New->prev = lista->sentinelaF;
+	lista->sentinelaF = New;
+	lista->sentinelaI->prev = New;
+	New->next = lista->sentinelaI;
+	lista->qtde++;
+		}
+		
+	else if(lista->qtde  == 0){
+		New->dado = dado;
+        New->next = lista->sentinelaI;
+        New->prev = lista->sentinelaF;
+        lista->sentinelaI = New;
+        if(lista->qtde == 0){
+            lista->sentinelaF = New;
+        }
+        lista->sentinelaF->next = lista->sentinelaI;
+        lista->qtde++;
+	}
+	}
+	else exit;
+}
+void removeFinal(Lista *lista){
+	if(lista->qtde == 0){
+		printf("Lista Vazia\n");
+	}
+	
+	else if(lista->qtde > 0){
+	Node *aux = lista->sentinelaF;
+	aux->prev->next = lista->sentinelaI;
+	aux->prev = lista->sentinelaF;
+	free(aux);
+	lista->qtde--;
+	}
+}
+
+void consulta(Lista lista){
+	Node *aux = lista.sentinelaI;
+	int i = 0;
+	if (aux != NULL){
+		while(i < lista.qtde){
+			printf("|%d|", aux->dado);
+			aux = aux->next;
+			i++;
+		}
+	}
+	printf("\n");
+}
+int main(){
+	Lista lista;
+	inicializar(&lista);
+	inserirInicio(&lista, 5);
+	consulta(lista);
+	inserirInicio(&lista, 4);
+	consulta(lista);
+	inserirFinal(&lista, 8);
+	consulta(lista);
+	inserirInicio(&lista, 3);
+	consulta(lista);
+	inserirFinal(&lista, 6);
+	consulta(lista);
+	inserirFinal(&lista, 8);
+	
+	removeFinal(&lista);
+	consulta(lista);
+	
+	
+	return 0;
+}
